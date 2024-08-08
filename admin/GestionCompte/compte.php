@@ -195,10 +195,10 @@ input[type='reset']:hover {
         $result = $stmtInsert->execute([$id,$intitule,$classe,$NbrCredit,$Description]) ;
 
         if($result){
-            $error  =  "Succefully added";
-          }else{
-            // $error = "Data have not been added";
-          }
+          $success = "Login successful! Redirecting...";
+        }else{
+          $error = "Nom d'utilisateur ou mot de passe est incorrect";
+         }
     // $variable_affichage = $connexion ->query("select * from cour");
     // while($bd_util =  $variable_affichage->fetch())
     // {

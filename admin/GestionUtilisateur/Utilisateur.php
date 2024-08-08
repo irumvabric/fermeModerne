@@ -77,6 +77,8 @@ form table,
 
 input[type='text'],
 input[type='number'],
+input[type='password'],
+select,
 textarea {
   width: 100%;
   padding: 8px;
@@ -127,11 +129,6 @@ input[type='reset']:hover {
         <form method="POST">
         <h1>Ajout Utilisateur</h1>
         <table>
-
-            <!-- <tr>
-              <td> Id Utilisateur  </td>
-              <td><input type="text" name="idSalle"/></td>
-            </tr> -->
             <tr>
               <td> Nom </td>
               <td><input type="text" name="nom" /></td>
@@ -159,12 +156,16 @@ input[type='reset']:hover {
 
             <tr>
               <td> Password	</td>
-              <td><input type="number" name="Password" /></td>
+              <td><input type="password" name="Password" /></td>
             </tr>
 
             <tr>
-              <td> Profil </td>
-              <td><input type="text" name="Profil" /></td>
+              <td> Profile</td>
+              <td>
+              <select name="profil"  >
+              <?php include '../../option/optionsprofil.php'; ?>           
+            </select>
+              </td>
             </tr>
 
    
@@ -201,10 +202,10 @@ input[type='reset']:hover {
         $result = $stmtInsert->execute([$id,$nom,$NbrPlaces]) ;
 
         if($result){
-            echo "Succefully added";
-          }else{
-            echo "Data have not been added";
-          }
+          $success = "Login successful! Redirecting...";
+        }else{
+          $error = "Nom d'utilisateur ou mot de passe est incorrect";
+         }
     // $variable_affichage = $connexion ->query("select * from cour");
     // while($bd_util =  $variable_affichage->fetch())
     // {

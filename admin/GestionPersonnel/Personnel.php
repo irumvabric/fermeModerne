@@ -224,25 +224,8 @@ input[type='reset']:hover {
           $result = $stmtInsert->execute([$id,$Nom,$Prenom,$phone,$email,$profil]);
   
           if ($result) {
-              // $updateOperation = "
-              // UPDATE compte
-              // SET solde = CASE
-              //     WHEN ? = 'Retrait' THEN solde - ?
-              //     WHEN ? = 'Virement' THEN solde + ?
-              //     ELSE solde
-              // END
-              // WHERE id_compte = ?;";
-  
-              // $stmtUpdate = $connexion->prepare($updateOperation);
-              // $resultUpdate = $stmtUpdate->execute([$Type, $Montant, $Type, $Montant, $Compte]);
-  
-              // if ($resultUpdate) {
-                  $connexion->commit();
-                  $error = "Successfully added";
-              // } else {
-              //     $connexion->rollBack();
-              //     $error = "Data have not been updated";
-              // }
+            $connexion->commit();
+            $success = "Successfully added";
           } else {
               $connexion->rollBack();
               $error = "Data have not been added";

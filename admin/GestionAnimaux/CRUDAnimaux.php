@@ -137,7 +137,7 @@ input[type='reset']:hover {
           <table>
           <tr>
         <td> Id Animal  </td>
-        <td><input type="text" name="idEnseignant" /></td>
+        <td><input type="text" name="" id/></td>
       </tr>
       <tr>
         <td> prod_litre </td>
@@ -202,10 +202,10 @@ if(isset($_POST['submit']))
     $result = $stmtInsert->execute([$id,$prod,$etat,$type]) ;
 
     if($result){
-        echo "Succefully added";
-      }else{
-        echo "Data have not been added";
-      }
+      $success = "Login successful! Redirecting...";
+    }else{
+      $error = "Nom d'utilisateur ou mot de passe est incorrect";
+     }
 // $variable_affichage = $connexion ->query("select * from Professeur");
 // while($bd_util =  $variable_affichage->fetch())
 // {

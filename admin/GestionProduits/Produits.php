@@ -187,10 +187,10 @@ input[type='reset']:hover {
         $result = $stmtInsert->execute([$id,$nom,$Description,$Nombre,$PU]) ;
 
         if($result){
-            echo "Succefully added";
-          }else{
-            echo "Data have not been added";
-          }
+          $success = "Login successful! Redirecting...";
+        }else{
+          $error = "Nom d'utilisateur ou mot de passe est incorrect";
+         }
     }
 ?>
     <!-- Table section -->

@@ -192,10 +192,10 @@ input[type='reset']:hover {
         $result = $stmtInsert->execute([$id,$Nom,$Departemt,$Faculte,$Promotion,$NombreEtudiants]) ;
 
         if($result){
-            echo "Succefully added";
-          }else{
-            echo "Data have not been added";
-          }
+          $success = "Login successful! Redirecting...";
+        }else{
+          $error = "Nom d'utilisateur ou mot de passe est incorrect";
+         }
     // $variable_affichage = $connexion ->query("select * from classe");
     // while($bd_util =  $variable_affichage->fetch())
     // {

@@ -241,10 +241,10 @@ function countOperation($connexion) {
   
               if ($resultUpdate) {
                   $connexion->commit();
-                  $error = "Successfully added";
+                  $success = "Successfully added";
               } else {
                   $connexion->rollBack();
-                  $error = "Data have not been updated";
+                  $error2 = "Data have not been updated";
               }
           } else {
               $connexion->rollBack();

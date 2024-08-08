@@ -1,4 +1,7 @@
 <?php
+
+        include 'admin/connexion.php';
+
         function getUserProfile($connexion, $id_profil) {
             $sqlProfile = "SELECT Nom FROM profil WHERE id_profil = ?";
             $stmtProfile = $connexion->prepare($sqlProfile);
@@ -14,28 +17,31 @@
             $stmtLogin = $connexion->prepare($sqlLogin);
             $stmtLogin->execute([$nom_utilisateur, $mot_de_passe]);
             $user = $stmtLogin->fetch(PDO::FETCH_ASSOC);
+
+            
         
             if ($user) {
-                // Authentication successful
-                $id_profil = $user['id_profil'];
-                $profileName = getUserProfile($connexion, $id_profil);
+            
+            $id_profil = $user['profil'];
+            $profileName = getUserProfile($connexion, $id_profil);
+            echo $profileName;
+                
         
-                // Redirect user based on profile
                 switch ($profileName) {
                     case 'Admin':
-                        header('Location: admin_dashboard.php');
+                        header('Location: admin/index.php');
                         break;
                     case 'Veterinaire':
-                        header('Location: manager_dashboard.php');
+                        header('Location: admin/GestionAnimaux/CRUDAnimaux.php');
                         break;
                     case 'Stock':
-                        header('Location: user_dashboard.php');
+                        header('Location: admin/GestionProduits/Produits.php');
                         break;
                     case 'Comptable':
-                            header('Location: user_dashboard.php');
-                            break;
+                        header('Location: admin/GestionFinances/Finances.php');
+                        break;
                     default:
-                        header('Location: default_dashboard.php');
+                        header('Location: index.php');
                         break;
                 }
                 exit();
@@ -45,47 +51,6 @@
         }
         
 ?>
-
-<!-- 
-- idTimetable
-- idCours
-- weekTime
-- idProfesseur
-- idSalle
-- Promotion
-- Departement
-- mon8_10
-- tue8_10
-- mon10_12
-- mon1_3
-- mon3_5
-- tue10_12
-- tue1_3
-- tue3_5
-- wed8_10
-- wed10_12
-- wed1_3
-- wed3_5
-- thu8_10
-- thu10_12
-- thu1_3
-- thu3_5
-- fri8_10
-- fri10_12
-- fri1_3
-- fri3_5
-- sat8_10
-- sat10_12
-- monRoom
-- tueRoom
-- wedRoom
-- thuRoom
-- friRoom
-- satRoom
-- CodeCourse
-- course
-- Lecturer
-- classe -->
 
 
 <!DOCTYPE html>
