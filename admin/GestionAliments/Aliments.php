@@ -189,16 +189,6 @@ input[type='reset']:hover {
         }else{
           $error = "Nom d'utilisateur ou mot de passe est incorrect";
          }
-    // $variable_affichage = $connexion ->query("select * from cour");
-    // while($bd_util =  $variable_affichage->fetch())
-    // {
-    //   if(($id ==$bd_util['id']))
-    //   {
-    //         echo('The course already exit in Database');
-    //     // header('location:home.php');
-      
-    //   }
-    // }
     }
 ?>
     <!-- Table section -->
@@ -227,7 +217,7 @@ input[type='reset']:hover {
                 <td><?php echo $aliment['Nombre']; ?></td>
                 <td><?php echo $aliment['PU']; ?></td>
                 <!-- <td>Edit || Delete</td> -->
-            </tr>v
+            </tr>
             <?php 
               endforeach;
             ?>

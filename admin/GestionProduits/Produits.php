@@ -218,7 +218,7 @@ input[type='reset']:hover {
                 <td><?php echo $produit['Description']; ?></td>
                 <td><?php echo $produit['Nombre']; ?></td>
                 <td><?php echo $produit['PU']; ?></td>
-                <td>Edit || Delete</td>
+                <!-- <td>Edit || Delete</td> -->
             </tr>
             <?php 
               endforeach;

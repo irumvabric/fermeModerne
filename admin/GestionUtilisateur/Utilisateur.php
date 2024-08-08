@@ -222,14 +222,12 @@ input[type='reset']:hover {
     <div class="table">
     <table>
             <tr>
-              <th>id</th>
-              <th>Nom</th>
-              <th>Prenom</th>
-              <th>Telephone</th>
-              <th>Email</th>
+              <th>id_personne</th>
               <th>Username</th>
               <th>Password</th>
               <th>Profil</th>
+              <th>Fonction</th>
+              <!-- <th>Actions</th> -->
             </tr>
             <?php
 
@@ -238,28 +236,94 @@ input[type='reset']:hover {
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
                 $utilisateurs = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+
+                include '../idToNom.php';
+
                 foreach($utilisateurs as $utilisateur): 
+                $utilisateur['profil'] = idToNom($connexion,$utilisateur['profil'])
+
                 ?>
             <tr>
-                <td> <?php echo $utilisateur['ID'];?></td>
-                <td><?php echo $utilisateur['nom']; ?></td>
-                <td> <?php echo $utilisateur['prenom'];?></td> 
-                <td> <?php echo $utilisateur['tel'];?></td> 
-                <td> <?php echo $utilisateur['email'];?></td> 
+                <td> <?php echo $utilisateur['id_personne'];?></td>
                 <td> <?php echo $utilisateur['username'];?></td> 
                 <td> <?php echo $utilisateur['password'];?></td> 
                 <td> <?php echo $utilisateur['profil'];?></td> 
-                
+                <td> <?php echo $utilisateur['fonction'];?></td> 
+                <!-- <td>
+                <button class="delete-btn" data-id="<?php echo $utilisateur['id_personne']; ?>">Delete</button>
+                <button class="edit-btn" data-id="<?php echo $utilisateur['id_personne']; ?>">Edit</button>
+            </td> -->
             </tr>
             <?php 
               endforeach;
+
+              // $id = $_GET['id'];
+
+              // Prepare and execute the DELETE statement
+              $sql = "DELETE FROM utilisateur WHERE id_personne = :id";
+              $stmt = $connexion->prepare($sql);
+              $stmt->bindParam(':id', $id);
+              $stmt->execute();
+
+              // echo json_encode(['success' => $stmt->rowCount() > 0]);
+
             ?>
       </table>
       </div>
    
   </div>
  
-  
+  <script>
+      const deleteButtons = document.querySelectorAll('.delete-btn');
+      const editButtons = document.querySelectorAll('.edit-btn');
+
+      deleteButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const id = event.target.dataset.id;
+        // Add confirmation dialog or other user interaction
+        if (confirm('Are you sure you want to delete this user?')) {
+            // Send delete request to PHP script using AJAX or Fetch API
+            fetch(`/delete_user.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the row from the table
+                        event.target.closest('tr').remove();
+                    } else {
+                        // Handle error
+                    }
+                })
+                .catch(error => {
+                    // Handle error
+                });
+        }
+    });
+});
+
+editButtons.forEach(button => {
+      button.addEventListener('click', (event) => {
+        const id = event.target.dataset.id;
+        // Add confirmation dialog or other user interaction
+        if (confirm('Are you sure you want to delete this user?')) {
+            // Send delete request to PHP script using AJAX or Fetch API
+            fetch(`/delete_user.php?id=${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the row from the table
+                        event.target.closest('tr').remove();
+                    } else {
+                        // Handle error
+                    }
+                })
+                .catch(error => {
+                    // Handle error
+                });
+        }
+    });
+});
+
+  </script>
 
 </body>
 </html>
