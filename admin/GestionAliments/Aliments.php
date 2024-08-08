@@ -125,24 +125,32 @@ input[type='reset']:hover {
     <!-- Form section -->
     <div class="form">
         <form method="POST">
-        <h1>Ajout Salle</h1>
+        <h1>Ajout Aliment</h1>
         <table>
 
-            <tr>
-              <td> Id Salle  </td>
-              <td><input type="text" name="idSalle" /></td>
+        <tr>
+              <td> Id Aliment  </td>
+              <td><input type="text" name="idAliment" disabled placeholder="Auto-complete"/></td>
             </tr>
             <tr>
               <td> Nom </td>
-              <td><input type="text" name="nom" /></td>
+              <td><input type="text" name="Nom" /></td>
             </tr>
 
             <tr>
-              <td> Nombres de places	</td>
-              <td><input type="number" name="NbrPlaces" /></td>
+              <td> Description	</td>
+              <td><input type="text" name="Description" /></td>
             </tr>
 
             <tr>
+              <td> Nombre	</td>
+              <td><input type="number" name="Nombre" /></td>
+            </tr>
+
+            <tr>
+              <td> Prix Unitaire	</td>
+              <td><input type="number" name="PU" /></td>
+            </tr>
             <tr>
               <td colspan="2">
                 <input type="submit" name="submit" value="Save" />
@@ -156,14 +164,25 @@ input[type='reset']:hover {
     <?php 
     if(isset($_POST['submit']))
     {
-        $id = $_POST['idSalle'];
-        $nom =$_POST['nom'];
-        $NbrPlaces = $_POST['NbrPlaces'];
-       
+      function countAliment($connexion) {
+        $sqlcountOperation = "SELECT COUNT(*) FROM aliment";
+        $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
+        $stmtsqlcountOperation->execute();
+        return $stmtsqlcountOperation->fetchColumn();
+      }
+
+      $nom =$_POST['Nom'];
+      $Description =$_POST['Description'];
+      $Nombre =$_POST['Nombre'];
+      $PU =$_POST['PU'];
+
+      $NombreAliment = countAliment($connexion);
+
+      $id = "Alim-" . substr($nom, 0, 4) . "-" . $NombreAliment . "-" . date("Y");
         
-        $insertSalle = " insert into salle(idSalle,Nom,NbrPlaces) values(?,?,?)" ;
+        $insertSalle = "insert into aliment(id_aliment,Nom,Description,Nombre,PU) values(?,?,?,?,?)" ;
         $stmtInsert = $connexion->prepare($insertSalle) ;
-        $result = $stmtInsert->execute([$id,$nom,$NbrPlaces]) ;
+        $result = $stmtInsert->execute([$id,$nom,$Description,$Nombre,$PU]) ;
 
         if($result){
             echo "Succefully added";
@@ -185,25 +204,30 @@ input[type='reset']:hover {
     <!-- Table section -->
     <div class="table">
     <table>
-            <tr>
+    <tr>
+               <th>Id Aliment</th>
               <th>Nom</th>
-              <th>Nombres de places</th>
-              <th>Functions</th>
+              <th>Description</th>
+              <th>Nombre</th>
+              <th>Prix Unitaire</th>
             </tr>
             <?php
 
                 include("../connexion.php");
-                $sql = "SELECT * FROM salle"; 
+                $sql = "SELECT * FROM aliment"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $salles = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-                foreach($salles as $salle): 
+                $aliments = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($aliments as $aliment): 
                 ?>
             <tr>
-                <td> <?php echo $salle['Nom'];?></td>
-                <td><?php echo $salle['NbrPlaces']; ?></td>
-                <td>Edit || Delete</td>
-            </tr>
+                <td> <?php echo $aliment['id_aliment'];?></td>
+                <td><?php echo $aliment['Nom']; ?></td>
+                <td><?php echo $aliment['Description']; ?></td>
+                <td><?php echo $aliment['Nombre']; ?></td>
+                <td><?php echo $aliment['PU']; ?></td>
+                <!-- <td>Edit || Delete</td> -->
+            </tr>v
             <?php 
               endforeach;
             ?>

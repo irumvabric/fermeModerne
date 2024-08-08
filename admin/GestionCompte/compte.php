@@ -145,7 +145,7 @@ input[type='reset']:hover {
         <?php } ?>
           <table>
             <tr>
-              <td> ID Cours </td>
+              <td> ID Compte </td>
               <td><input type="text" name="id" /></td>
             </tr>
 

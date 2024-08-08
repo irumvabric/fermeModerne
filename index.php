@@ -1,24 +1,49 @@
 <?php
-        include 'admin/connexion.php';
-
+        function getUserProfile($connexion, $id_profil) {
+            $sqlProfile = "SELECT Nom FROM profil WHERE id_profil = ?";
+            $stmtProfile = $connexion->prepare($sqlProfile);
+            $stmtProfile->execute([$id_profil]);
+            return $stmtProfile->fetchColumn();
+        }
+        
         if (isset($_POST['submit'])) {
             $nom_utilisateur = $_POST['username'];
             $mot_de_passe = $_POST['password'];
-
-            // Use a prepared statement to prevent SQL injection
-            $sqlLogin = "SELECT * FROM utilisateur WHERE username = ? AND password = ?" ;
+        
+            $sqlLogin = "SELECT * FROM utilisateur WHERE username = ? AND password = ?";
             $stmtLogin = $connexion->prepare($sqlLogin);
             $stmtLogin->execute([$nom_utilisateur, $mot_de_passe]);
             $user = $stmtLogin->fetch(PDO::FETCH_ASSOC);
-
+        
             if ($user) {
                 // Authentication successful
-                header('location: admin/home_admin.php');
+                $id_profil = $user['id_profil'];
+                $profileName = getUserProfile($connexion, $id_profil);
+        
+                // Redirect user based on profile
+                switch ($profileName) {
+                    case 'Admin':
+                        header('Location: admin_dashboard.php');
+                        break;
+                    case 'Veterinaire':
+                        header('Location: manager_dashboard.php');
+                        break;
+                    case 'Stock':
+                        header('Location: user_dashboard.php');
+                        break;
+                    case 'Comptable':
+                            header('Location: user_dashboard.php');
+                            break;
+                    default:
+                        header('Location: default_dashboard.php');
+                        break;
+                }
                 exit();
             } else {
                 $error = 'Nom d\'utilisateur ou mot de passe est incorrect';
             }
         }
+        
 ?>
 
 <!-- 

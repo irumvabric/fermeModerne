@@ -1,123 +1,114 @@
-<?php
-$server_address="Localhost";
-$user_name="root";
-$bd_name="horaire";
-$pwd= "";
-$con = new PDO("mysql:host=$server_address;dbname=$bd_name",$user_name,$pwd);
-
-?>
-
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-	.wrapper{
-		width:420px;
-		border-radius: 10px;
-	}
-	.wrapper h1{
-		font-size:  36px;
-		text-align: center;
-	}
-  body {
-	display: flex;
-	justify-content: center;
-	align-items:center;
-	min-height: 90vh;
-    font-family: Arial, sans-serif;
-    background-color: #f0f0f0;
-  }
-  
-  form {
-    width: 300px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-  }
-  
-  table {
-    width: 100%;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+   body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #c7c7c7;
+    }
 
-  }
-  
-  table td {
-    padding: 5px;
-  }
-  
-  input[type='text'],
-  input[type='password'] {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-  }
-  
-  input[type='submit'],
-  input[type='reset'] {
-    padding: 10px 20px;
-    border: none;
-    background-color: #4CAF50;
-    color: white;
+    header {
+      background-color: #45aF50;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
 
-    cursor: pointer;
-    border-radius: 4px;
-    font-size: 16px;
-  }
-  
-  input[type='submit']:hover,
-  input[type='reset']:hover {
-    background-color: #45a049;
-  }
-</style>
+    nav {
+      background-color: #45a000;
+      color: #fff;
+      text-align: center;
+      padding: 1em;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 20px;
+      margin: 0 10px;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+
+    nav a:hover {
+      color: #000;
+      background-color: #45a569;
+    }
+
+    section {
+      padding: 20px;
+      margin-left: 20%;
+      margin-right: 20%;
+      margin-top: 3%;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background-color: #fff;
+      color: #333;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+    }
+
+    .card a{
+        text-decoration: none;
+        color:#000;
+
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+
+    .card1 {
+      background-color: #45a569;
+      
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+      text-align: center;
+      transition: transform 0.3s;
+      border:1px solid #45a000;
+    }
+
+    .card1 a{
+        
+        text-decoration: none;
+        color: #fff;
+
+    }
+
+    .card1:hover {
+      transform: translateY(-5px);
+    }
+
+  </style>
+  <title>Gestion ferme</title>
 </head>
 <body>
-	<div class="wrapper">
-  <form method="POST">
-	<h1>Login</h1>
-    <table>
-      <tr>
-        <td> Username :</td>
-        <td><input type="text" name="user" /></td>
-      </tr>
-      <tr>
-        <td> Password :</td>
 
-        <td><input type="password" name="psw" /></td>
-      </tr>
-      <tr>
-        <td colspan="2">
-          <input type="submit" name="submit" value="Connect" />
-          <input type="reset" value="Cancel" />
-        </td>
-      </tr>
-    </table>
-  </form>
-<?php 
-if(isset($_POST['submit']))
-{
-	$user_name =$_POST['user'];
-	$psw= $_POST['psw'];
+  <header>
+    <h1>Gestion ferme</h1>
+  </header>
 
-$variable_affichage = $con ->query("select * from utilisateur");
-while($bd_util =  $variable_affichage->fetch())
-{
-	if(($user_name ==$bd_util['username']) && ($psw==$bd_util['password']))
-	{
-		header('location:home_admin.php');
-	
-	}
-	else
-	{
-		echo('Paramètres de connexion incorects');
-	}
+  <?php
+      include "menu.php";
+  ?>
 
-}
-}
-?>
+<?php
+      include "BodyMenu.php";
+  ?>
+
 </body>
 </html>

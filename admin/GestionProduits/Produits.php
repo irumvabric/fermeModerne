@@ -125,24 +125,32 @@ input[type='reset']:hover {
     <!-- Form section -->
     <div class="form">
         <form method="POST">
-        <h1>Ajout Salle</h1>
+        <h1>Ajout Produit</h1>
         <table>
 
             <tr>
-              <td> Id Salle  </td>
-              <td><input type="text" name="idSalle" /></td>
+              <td> Id Produit  </td>
+              <td><input type="text" name="idProduit" disabled placeholder="Auto-complete" /></td>
             </tr>
             <tr>
               <td> Nom </td>
-              <td><input type="text" name="nom" /></td>
+              <td><input type="text" name="Nom" /></td>
             </tr>
 
             <tr>
-              <td> Nombres de places	</td>
-              <td><input type="number" name="NbrPlaces" /></td>
+              <td> Description	</td>
+              <td><input type="text" name="Description" /></td>
             </tr>
 
             <tr>
+              <td> Nombre	</td>
+              <td><input type="number" name="Nombre" /></td>
+            </tr>
+
+            <tr>
+              <td> Prix Unitaire	</td>
+              <td><input type="number" name="PU" /></td>
+            </tr>
             <tr>
               <td colspan="2">
                 <input type="submit" name="submit" value="Save" />
@@ -156,52 +164,60 @@ input[type='reset']:hover {
     <?php 
     if(isset($_POST['submit']))
     {
-        $id = $_POST['idSalle'];
-        $nom =$_POST['nom'];
-        $NbrPlaces = $_POST['NbrPlaces'];
+      function countProduit($connexion) {
+        $sqlcountOperation = "SELECT COUNT(*) FROM produit";
+        $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
+        $stmtsqlcountOperation->execute();
+        return $stmtsqlcountOperation->fetchColumn();
+    }
+
+      $nom =$_POST['Nom'];
+      $Description =$_POST['Description'];
+      $Nombre =$_POST['Nombre'];
+      $PU =$_POST['PU'];
+
+      $NombreProduit = countProduit($connexion);
+
+      $id = "Prod-" . substr($nom, 0, 4) . "-" . $NombreProduit . "-" . date("Y");
+
        
         
-        $insertSalle = " insert into salle(idSalle,Nom,NbrPlaces) values(?,?,?)" ;
+        $insertSalle = " insert into produit(id_produit,Nom,Description,Nombre,PU) values(?,?,?,?,?)" ;
         $stmtInsert = $connexion->prepare($insertSalle) ;
-        $result = $stmtInsert->execute([$id,$nom,$NbrPlaces]) ;
+        $result = $stmtInsert->execute([$id,$nom,$Description,$Nombre,$PU]) ;
 
         if($result){
             echo "Succefully added";
           }else{
             echo "Data have not been added";
           }
-    // $variable_affichage = $connexion ->query("select * from cour");
-    // while($bd_util =  $variable_affichage->fetch())
-    // {
-    //   if(($id ==$bd_util['id']))
-    //   {
-    //         echo('The course already exit in Database');
-    //     // header('location:home.php');
-      
-    //   }
-    // }
     }
 ?>
     <!-- Table section -->
     <div class="table">
     <table>
             <tr>
+               <th>Id Produit</th>
               <th>Nom</th>
-              <th>Nombres de places</th>
-              <th>Functions</th>
+              <th>Description</th>
+              <th>Nombre</th>
+              <th>Prix Unitaire</th>
             </tr>
             <?php
 
                 include("../connexion.php");
-                $sql = "SELECT * FROM salle"; 
+                $sql = "SELECT * FROM produit"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $salles = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-                foreach($salles as $salle): 
+                $produits = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($produits as $produit): 
                 ?>
             <tr>
-                <td> <?php echo $salle['Nom'];?></td>
-                <td><?php echo $salle['NbrPlaces']; ?></td>
+                <td> <?php echo $produit['id_produit'];?></td>
+                <td><?php echo $produit['Nom']; ?></td>
+                <td><?php echo $produit['Description']; ?></td>
+                <td><?php echo $produit['Nombre']; ?></td>
+                <td><?php echo $produit['PU']; ?></td>
                 <td>Edit || Delete</td>
             </tr>
             <?php 

@@ -145,29 +145,37 @@ input[type='reset']:hover {
         <?php } ?>
           <table>
             <tr>
-              <td> ID Cours </td>
-              <td><input type="text" name="id" /></td>
-            </tr>
-
-            <tr>
-              <td> Intitulé</td>
-              <td><input type="text" name="intitule" /></td>
-            </tr>
-
-            <tr>
-              <td> Classe</td>
-              <td><input type="text" name="classe"></td>
-            </tr>
-
-            <tr>
-              <td> Nombre de Credit</td>
-              <td><input type="number" name="NbrCredit" /></td>
+              <td> ID Operation </td>
+              <td><input type="text" name="idOperation" placeholder="Auto-complete" disabled/></td>
             </tr>
 
             <tr>
               <td> Description</td>
-              <td>  <textarea name="Desc" rows="4" cols="50"></textarea>
-      </td>
+              <td><input type="text" name="Description" /></td>
+            </tr>
+
+            <tr>
+              <td> Montant</td>
+              <td><input type="text" name="Montant"></td>
+            </tr>
+
+            <tr>
+              <td> Type </td>
+              <td>
+              <select name="Type"  >
+                    <option value="Retrait">Retrait</option>
+                    <option value="Virement">Virement</option>
+            </select>
+              </td>
+            </tr>
+
+            <tr>
+              <td> Compte</td>
+              <td>
+              <select name="Compte"  >
+              <?php include '../../option/optionsCompte.php'; ?>           
+            </select>
+              </td>
             </tr>
 
             <tr>
@@ -182,39 +190,72 @@ input[type='reset']:hover {
 
 
     <?php 
-    if(isset($_POST['submit']))
-    {
-        $id =$_POST['id'];
-        $intitule = $_POST['intitule'];
-        $classe = $_POST['classe'];
-        $NbrCredit =$_POST['NbrCredit'];
-        $Description = $_POST['Desc'];
 
-          // generated id for operation
-
-          $id_operation = $_POST['idSalle'];
-        
-        
-        $insertCourse = " insert into cour(id,intitule,classe,NbrCredit,Description) values(?,?,?,?,?)" ;
-        $stmtInsert = $connexion->prepare($insertCourse) ;
-        $result = $stmtInsert->execute([$id,$intitule,$classe,$NbrCredit,$Description]) ;
-
-        if($result){
-            $error  =  "Succefully added";
-          }else{
-            // $error = "Data have not been added";
+function countOperation($connexion) {
+      $sqlcountOperation = "SELECT COUNT(*) FROM operation";
+      $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
+      $stmtsqlcountOperation->execute();
+      return $stmtsqlcountOperation->fetchColumn();
+  }
+  
+  function countOperPara($connexion, $TypeOp) {
+      $sqlcountOperation = "SELECT COUNT(*) FROM operation WHERE type = ?";
+      $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
+      $stmtsqlcountOperation->execute([$TypeOp]);
+      return $stmtsqlcountOperation->fetchColumn();
+  }
+  
+  if (isset($_POST['submit'])) {
+    $Description = $_POST['Description'];
+    $Montant = $_POST['Montant'];
+    $Type = $_POST['Type'];
+    $Compte =$_POST['Compte'];
+  
+      $NombreOperation = countOperPara($connexion, $Type) + 1;
+  
+      if ($Type == 'Retrait') {
+          $id = "R-" . substr($Compte, 0, 4) . "-" . $NombreOperation . "-" . date("Y");
+      } else if ($Type == 'Virement') {
+          $id = "V-" . substr($Compte, 0, 4) . "-" . $NombreOperation . "-" . date("Y");
+      }
+  
+      try {
+          $connexion->beginTransaction();
+  
+          $insertoperation = "INSERT INTO operation(id_operation, Description, montant, compte, type) VALUES(?,?,?,?,?)";
+          $stmtInsert = $connexion->prepare($insertoperation);
+          $result = $stmtInsert->execute([$id, $Description, $Montant, $Compte, $Type]);
+  
+          if ($result) {
+              $updateOperation = "
+              UPDATE compte
+              SET solde = CASE
+                  WHEN ? = 'Retrait' THEN solde - ?
+                  WHEN ? = 'Virement' THEN solde + ?
+                  ELSE solde
+              END
+              WHERE id_compte = ?;";
+  
+              $stmtUpdate = $connexion->prepare($updateOperation);
+              $resultUpdate = $stmtUpdate->execute([$Type, $Montant, $Type, $Montant, $Compte]);
+  
+              if ($resultUpdate) {
+                  $connexion->commit();
+                  $error = "Successfully added";
+              } else {
+                  $connexion->rollBack();
+                  $error = "Data have not been updated";
+              }
+          } else {
+              $connexion->rollBack();
+              $error = "Data have not been added";
           }
-    // $variable_affichage = $connexion ->query("select * from cour");
-    // while($bd_util =  $variable_affichage->fetch())
-    // {
-    //   if(($id ==$bd_util['id']))
-    //   {
-    //         echo('The course already exit in Database');
-    //     // header('location:home.php');
-      
-    //   }
-    // }
-    }
+      } catch (Exception $e) {
+          $connexion->rollBack();
+          $error = "Transaction failed: " . $e->getMessage();
+      }
+  }
+  
 ?>
 
 <?php
@@ -228,27 +269,27 @@ input[type='reset']:hover {
     <table>
             <tr>
               <th>id</th>
-              <th>intitule</th>
-              <th>Classe</th>
-              <th>NbrCredit</th>
               <th>Description</th>
-              <!-- <th>Functions</th> -->
+              <th>Montant</th>
+              <th>Compte</th>
+              <th>Type</th>
+
             </tr>
             <?php
 
                 include("../connexion.php");
-                $sql = "SELECT * FROM cour"; 
+                $sql = "SELECT * FROM operation"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $cours = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-                foreach($cours as $cour): 
+                $operations = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($operations as $operation): 
                 ?>
             <tr>
-                <td> <?php echo $cour['idCour'];?></td>
-                <td><?php echo $cour['intitule']; ?></td>
-                <td> <?php echo $cour['classe'];?></td> 
-                <td> <?php echo $cour['NbrCredit'];?></td> 
-                <td> <?php echo $cour['Description'];?></td> 
+                <td> <?php echo $operation['id_operation'];?></td>
+                <td><?php echo $operation['Description']; ?></td>
+                <td> <?php echo $operation['montant'];?></td> 
+                <td> <?php echo $operation['compte'];?></td> 
+                <td> <?php echo $operation['type'];?></td> 
                 
             </tr>
             <?php 

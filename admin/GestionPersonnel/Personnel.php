@@ -76,6 +76,7 @@ form table,
 }
 
 input[type='text'],
+select,
 input[type='number'],
 textarea {
   width: 100%;
@@ -130,7 +131,7 @@ input[type='reset']:hover {
           <table>
             <tr>
               <td> ID Personnel </td>
-              <td><input type="text" name="id" /></td>
+              <td><input type="text" name="id" placeholder="Auto-Complete" disabled/></td>
             </tr>
 
             <tr>
@@ -154,8 +155,12 @@ input[type='reset']:hover {
             </tr>
 
             <tr>
-              <td> profil</td>
-              <td><input type="text" name="profil" /></td>
+              <td> Profile</td>
+              <td>
+              <select name="profil"  >
+              <?php include '../../option/optionsprofil.php'; ?>           
+            </select>
+              </td>
             </tr>
 
             <!-- <tr>
@@ -175,33 +180,78 @@ input[type='reset']:hover {
 
 
     <?php 
-    if(isset($_POST['submit']))
-    {
-        $id =$_POST['id'];
-        $Nom = $_POST['Nom'];
-        // $Faculte = $_POST['Faculte'];
-        
-        
-        $insertFac = " insert into faculte(id,nom) values(?,?)" ;
-        $stmtInsert = $connexion->prepare($insertFac) ;
-        $result = $stmtInsert->execute([$id,$Nom]) ;
+    function countPers($connexion) {
+      $sqlcountPersonne = "SELECT COUNT(*) FROM personne";
+      $stmtsqlcountPersonne = $connexion->prepare($sqlcountPersonne);
+      $stmtsqlcountPersonne->execute();
+      return $stmtsqlcountPersonne->fetchColumn();
+  }
+  
+  function countPersonPara($connexion, $profil) {
+      $sqlcountPersonne = "SELECT COUNT(*) FROM personne WHERE profil = ?";
+      $stmtsqlcountPersonne = $connexion->prepare($sqlcountPersonne);
+      $stmtsqlcountPersonne->execute([$profil]);
+      return $stmtsqlcountPersonne->fetchColumn();
+  }
 
-        if($result){
-            echo "Succefully added";
-          }else{
-            echo "Data have not been added";
+  function idToNom($connexion,$id_profil) {
+    $sqlcountPersonne = "SELECT Nom FROM profil WHERE id_profil = ?";
+    $stmtsqlcountPersonne = $connexion->prepare($sqlcountPersonne);
+    $stmtsqlcountPersonne->execute([$id_profil]);
+    return $stmtsqlcountPersonne->fetchColumn();
+}
+  
+  if (isset($_POST['submit'])) {
+    $Nom = $_POST['Nom'];
+    $Prenom = $_POST['Prenom'];
+    $phone = $_POST['phone'];
+    $email =$_POST['email'];
+    $profil =$_POST['profil'];
+
+    
+  
+    $NombrePersonnne = countPersonPara($connexion, $profil) + 1;
+    $idToNom = idToNom($connexion, $profil);
+  
+    $id = Strtoupper(substr($idToNom, 0, 1)) . "-" . $NombrePersonnne . "-" . date("Y");
+     
+  
+      try {
+          $connexion->beginTransaction();
+  
+          $insertPersonne = "INSERT INTO personne(id_personnel,Nom,prenom,phone,email,profil) VALUES(?,?,?,?,?,?)";
+          $stmtInsert = $connexion->prepare($insertPersonne);
+          $result = $stmtInsert->execute([$id,$Nom,$Prenom,$phone,$email,$profil]);
+  
+          if ($result) {
+              // $updateOperation = "
+              // UPDATE compte
+              // SET solde = CASE
+              //     WHEN ? = 'Retrait' THEN solde - ?
+              //     WHEN ? = 'Virement' THEN solde + ?
+              //     ELSE solde
+              // END
+              // WHERE id_compte = ?;";
+  
+              // $stmtUpdate = $connexion->prepare($updateOperation);
+              // $resultUpdate = $stmtUpdate->execute([$Type, $Montant, $Type, $Montant, $Compte]);
+  
+              // if ($resultUpdate) {
+                  $connexion->commit();
+                  $error = "Successfully added";
+              // } else {
+              //     $connexion->rollBack();
+              //     $error = "Data have not been updated";
+              // }
+          } else {
+              $connexion->rollBack();
+              $error = "Data have not been added";
           }
-    // $variable_affichage = $connexion ->query("select * from faculte");
-    // while($bd_util =  $variable_affichage->fetch())
-    // {
-    //   if(($id ==$bd_util['id']))
-    //   {
-    //         echo('The course already exit in Database');
-    //     // header('location:home.php');
-      
-    //   }
-    // }
-    }
+      } catch (Exception $e) {
+          $connexion->rollBack();
+          $error = "Transaction failed: " . $e->getMessage();
+      }
+  }
 ?>
     <!-- Table section -->
     <div class="table">
