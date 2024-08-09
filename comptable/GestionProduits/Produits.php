@@ -125,12 +125,12 @@ input[type='reset']:hover {
     <!-- Form section -->
     <div class="form">
         <form method="POST">
-        <h1>Ajout Aliment</h1>
+        <h1>Ajout Produit</h1>
         <table>
 
-        <tr>
-              <td> Id Aliment  </td>
-              <td><input type="text" name="idAliment" disabled placeholder="Auto-complete"/></td>
+            <tr>
+              <td> Id Produit  </td>
+              <td><input type="text" name="idProduit" disabled placeholder="Auto-complete" /></td>
             </tr>
             <tr>
               <td> Nom </td>
@@ -151,12 +151,12 @@ input[type='reset']:hover {
               <td> Prix Unitaire	</td>
               <td><input type="number" name="PU" /></td>
             </tr>
-            <!-- <tr>
+            <tr>
               <td colspan="2">
                 <input type="submit" name="submit" value="Save" />
                 <input type="reset" value="Cancel" />
               </td>
-            </tr> -->
+            </tr>
           </table>
         </form>
     </div>
@@ -164,23 +164,25 @@ input[type='reset']:hover {
     <?php 
     if(isset($_POST['submit']))
     {
-      function countAliment($connexion) {
-        $sqlcountOperation = "SELECT COUNT(*) FROM aliment";
+      function countProduit($connexion) {
+        $sqlcountOperation = "SELECT COUNT(*) FROM produit";
         $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
         $stmtsqlcountOperation->execute();
         return $stmtsqlcountOperation->fetchColumn();
-      }
+    }
 
       $nom =$_POST['Nom'];
       $Description =$_POST['Description'];
       $Nombre =$_POST['Nombre'];
       $PU =$_POST['PU'];
 
-      $NombreAliment = countAliment($connexion);
+      $NombreProduit = countProduit($connexion);
 
-      $id = "Alim-" . substr($nom, 0, 4) . "-" . $NombreAliment . "-" . date("Y");
+      $id = "Prod-" . substr($nom, 0, 4) . "-" . $NombreProduit . "-" . date("Y");
+
+       
         
-        $insertSalle = "insert into aliment(id_aliment,Nom,Description,Nombre,PU) values(?,?,?,?,?)" ;
+        $insertSalle = " insert into produit(id_produit,Nom,Description,Nombre,PU) values(?,?,?,?,?)" ;
         $stmtInsert = $connexion->prepare($insertSalle) ;
         $result = $stmtInsert->execute([$id,$nom,$Description,$Nombre,$PU]) ;
 
@@ -194,8 +196,8 @@ input[type='reset']:hover {
     <!-- Table section -->
     <div class="table">
     <table>
-    <tr>
-               <th>Id Aliment</th>
+            <tr>
+               <th>Id Produit</th>
               <th>Nom</th>
               <th>Description</th>
               <th>Nombre</th>
@@ -204,18 +206,18 @@ input[type='reset']:hover {
             <?php
 
                 include("../connexion.php");
-                $sql = "SELECT * FROM aliment"; 
+                $sql = "SELECT * FROM produit"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $aliments = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-                foreach($aliments as $aliment): 
+                $produits = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($produits as $produit): 
                 ?>
             <tr>
-                <td> <?php echo $aliment['id_aliment'];?></td>
-                <td><?php echo $aliment['Nom']; ?></td>
-                <td><?php echo $aliment['Description']; ?></td>
-                <td><?php echo $aliment['Nombre']; ?></td>
-                <td><?php echo $aliment['PU']; ?></td>
+                <td> <?php echo $produit['id_produit'];?></td>
+                <td><?php echo $produit['Nom']; ?></td>
+                <td><?php echo $produit['Description']; ?></td>
+                <td><?php echo $produit['Nombre']; ?></td>
+                <td><?php echo $produit['PU']; ?></td>
                 <!-- <td>Edit || Delete</td> -->
             </tr>
             <?php 

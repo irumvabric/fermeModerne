@@ -32,13 +32,13 @@
                         header('Location: admin/index.php');
                         break;
                     case 'Veterinaire':
-                        header('Location: admin/GestionAnimaux/CRUDAnimaux.php');
+                        header('Location: veterinaire/GestionAnimaux/CRUDAnimaux.php');
                         break;
                     case 'Stock':
-                        header('Location: admin/GestionProduits/Produits.php');
+                        header('Location: stock/GestionProduits/Produits.php');
                         break;
                     case 'Comptable':
-                        header('Location: admin/GestionFinances/Finances.php');
+                        header('Location: comptable/GestionFinances/Finances.php');
                         break;
                     default:
                         header('Location: index.php');

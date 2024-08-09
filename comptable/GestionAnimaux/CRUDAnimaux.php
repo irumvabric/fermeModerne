@@ -162,12 +162,12 @@ input[type='reset']:hover {
             </select></td>
       </tr>
 
-            <!-- <tr>
+            <tr>
               <td colspan="2">
                 <input type="submit" name="submit" value="Save" />
                 <input type="reset" value="Cancel" />
               </td>
-            </tr> -->
+            </tr>
           </table>
         </form>
     </div>

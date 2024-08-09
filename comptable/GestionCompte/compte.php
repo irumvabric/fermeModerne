@@ -77,6 +77,7 @@ form table,
 
 input[type='text'],
 input[type='number'],
+select,
 textarea {
   width: 100%;
   padding: 8px;
@@ -113,110 +114,137 @@ input[type='reset']:hover {
   font-size: 36px;
   text-align: center;
 }
+
+     .error {
+            width: 75%;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border: 2px solid #ff0000;
+            background-color:  #ff0000;
+            color: wheat;
+            margin-left:9%;
+            margin-bottom: 10px;
+        }
 </style>
 </head>
 <body>
   
 <?php
-    include("../subMenu.php");
+    include("../Menu.php");
   ?>
 	
   <div class="wrapper">
     <!-- Form section -->
     <div class="form">
         <form method="POST">
-        <h1>Ajout Aliment</h1>
-        <table>
-
-        <tr>
-              <td> Id Aliment  </td>
-              <td><input type="text" name="idAliment" disabled placeholder="Auto-complete"/></td>
-            </tr>
+        <h1>Ajout Cours</h1>
+        <?php if (isset($error)) { ?>
+            <div class="error"><?= $error ?></div>
+        <?php } ?>
+          <table>
             <tr>
-              <td> Nom </td>
-              <td><input type="text" name="Nom" /></td>
+              <td> ID Compte </td>
+              <td><input type="text" name="id" /></td>
             </tr>
 
             <tr>
-              <td> Description	</td>
-              <td><input type="text" name="Description" /></td>
+              <td> Intitulé</td>
+              <td><input type="text" name="intitule" /></td>
             </tr>
 
             <tr>
-              <td> Nombre	</td>
-              <td><input type="number" name="Nombre" /></td>
+              <td> Classe</td>
+              <td><input type="text" name="classe"></td>
             </tr>
 
             <tr>
-              <td> Prix Unitaire	</td>
-              <td><input type="number" name="PU" /></td>
+              <td> Nombre de Credit</td>
+              <td><input type="number" name="NbrCredit" /></td>
             </tr>
-            <!-- <tr>
+
+            <tr>
+              <td> Description</td>
+              <td>  <textarea name="Desc" rows="4" cols="50"></textarea>
+      </td>
+            </tr>
+
+            <tr>
               <td colspan="2">
                 <input type="submit" name="submit" value="Save" />
                 <input type="reset" value="Cancel" />
               </td>
-            </tr> -->
+            </tr>
           </table>
         </form>
     </div>
 
+
     <?php 
     if(isset($_POST['submit']))
     {
-      function countAliment($connexion) {
-        $sqlcountOperation = "SELECT COUNT(*) FROM aliment";
-        $stmtsqlcountOperation = $connexion->prepare($sqlcountOperation);
-        $stmtsqlcountOperation->execute();
-        return $stmtsqlcountOperation->fetchColumn();
-      }
-
-      $nom =$_POST['Nom'];
-      $Description =$_POST['Description'];
-      $Nombre =$_POST['Nombre'];
-      $PU =$_POST['PU'];
-
-      $NombreAliment = countAliment($connexion);
-
-      $id = "Alim-" . substr($nom, 0, 4) . "-" . $NombreAliment . "-" . date("Y");
+        $id =$_POST['id'];
+        $intitule = $_POST['intitule'];
+        $classe = $_POST['classe'];
+        $NbrCredit =$_POST['NbrCredit'];
+        $Description = $_POST['Desc'];
         
-        $insertSalle = "insert into aliment(id_aliment,Nom,Description,Nombre,PU) values(?,?,?,?,?)" ;
-        $stmtInsert = $connexion->prepare($insertSalle) ;
-        $result = $stmtInsert->execute([$id,$nom,$Description,$Nombre,$PU]) ;
+        $insertCourse = " insert into cour(id,intitule,classe,NbrCredit,Description) values(?,?,?,?,?)" ;
+        $stmtInsert = $connexion->prepare($insertCourse) ;
+        $result = $stmtInsert->execute([$id,$intitule,$classe,$NbrCredit,$Description]) ;
 
         if($result){
           $success = "Login successful! Redirecting...";
         }else{
           $error = "Nom d'utilisateur ou mot de passe est incorrect";
          }
+    // $variable_affichage = $connexion ->query("select * from cour");
+    // while($bd_util =  $variable_affichage->fetch())
+    // {
+    //   if(($id ==$bd_util['id']))
+    //   {
+    //         echo('The course already exit in Database');
+    //     // header('location:home.php');
+      
+    //   }
+    // }
     }
 ?>
+
+<?php
+    if(isset($_GET["supp"])){
+        $Recusup=$_GET["supp"];
+        $suputil=$connexion -> query ("delete * from cour where id=$Recusup");
+    }
+    ?>
     <!-- Table section -->
     <div class="table">
     <table>
-    <tr>
-               <th>Id Aliment</th>
-              <th>Nom</th>
+            <tr>
+              <th>id</th>
+              <th>intitule</th>
+              <th>Classe</th>
+              <th>NbrCredit</th>
               <th>Description</th>
-              <th>Nombre</th>
-              <th>Prix Unitaire</th>
+              <!-- <th>Functions</th> -->
             </tr>
             <?php
 
                 include("../connexion.php");
-                $sql = "SELECT * FROM aliment"; 
+                $sql = "SELECT * FROM cour"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $aliments = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
-                foreach($aliments as $aliment): 
+                $cours = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($cours as $cour): 
                 ?>
             <tr>
-                <td> <?php echo $aliment['id_aliment'];?></td>
-                <td><?php echo $aliment['Nom']; ?></td>
-                <td><?php echo $aliment['Description']; ?></td>
-                <td><?php echo $aliment['Nombre']; ?></td>
-                <td><?php echo $aliment['PU']; ?></td>
-                <!-- <td>Edit || Delete</td> -->
+                <td> <?php echo $cour['idCour'];?></td>
+                <td><?php echo $cour['intitule']; ?></td>
+                <td> <?php echo $cour['classe'];?></td> 
+                <td> <?php echo $cour['NbrCredit'];?></td> 
+                <td> <?php echo $cour['Description'];?></td> 
+                
             </tr>
             <?php 
               endforeach;
