@@ -1,8 +1,6 @@
 <?php
 include("../connexion.php");
 ?>
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -78,6 +76,7 @@ form table,
 input[type='text'],
 input[type='number'],
 input[type='password'],
+input[type='date'],
 select,
 textarea {
   width: 100%;
@@ -127,7 +126,7 @@ input[type='reset']:hover {
     <!-- Form section -->
     <div class="form">
         <form method="POST">
-        <h1>Ajout Utilisateur</h1>
+        <h1>Ajout Sur Journal</h1>
         <table>
             <tr>
               <td> Personne </td>
@@ -139,40 +138,29 @@ input[type='reset']:hover {
             </tr>
 
             <tr>
-              <td> Prenom	</td>
-              <td><input type="number" name="Prenom" /></td>
+              <td> Description	</td>
+              <td><input type="text" name="Description" /></td>
+            </tr>
+
+
+            <tr>
+              <td> Date	</td>
+              <td><input type="Date" name="Date" /></td>
             </tr>
 
             <tr>
-              <td> Telephone </td>
-              <td><input type="text" name="Telephone" /></td>
-            </tr>
-
-            <tr>
-              <td> Email	</td>
-              <td><input type="number" name="Email" /></td>
-            </tr>
-
-            <tr>
-              <td> Username </td>
-              <td><input type="text" name="Username" /></td>
-            </tr>
-
-            <tr>
-              <td> Password	</td>
-              <td><input type="password" name="Password" /></td>
-            </tr>
-
-            <tr>
-              <td> Profile</td>
+              <td> IDAnimal </td>
               <td>
-              <select name="profil"  >
-              <?php include '../../option/optionsprofil.php'; ?>           
+              <select name="id_Animal"  >
+              <?php include '../../option/optionsAnimal.php'; ?>           
             </select>
               </td>
             </tr>
 
-   
+            <tr>
+              <td> Produit(en litre) </td>
+              <td><input type="number" name="Quantite" /></td>
+            </tr>
 
             <tr>
             <tr>
@@ -189,26 +177,20 @@ input[type='reset']:hover {
     if(isset($_POST['submit']))
     {
         
-        $nom =$_POST['nom'];
-        $Prenom = $_POST['Prenom'];
-        $Telephone = $_POST['Telephone'];
-        $Email = $_POST['Email'];
-        $Username = $_POST['Username'];
-        $Password = $_POST['Password'];
-        $Profil = $_POST['Profil'];
-       
-        // generated id for users
-
-        $id = $_POST['idSalle'];
-        
-        $insertSalle = " insert into salle(idSalle,Nom,NbrPlaces) values(?,?,?)" ;
+        $personne =$_POST['personne'];
+        $Quantite = $_POST['Quantite'];
+        $id_Animal = $_POST['id_Animal'];
+        $Date = $_POST['Date'];
+        $Description = $_POST['Description'];
+                    
+        $insertSalle = " insert into journal(idPersonne,Quantite,idAnimal,Date,Description) values(?,?,?,?,?)" ;
         $stmtInsert = $connexion->prepare($insertSalle) ;
-        $result = $stmtInsert->execute([$id,$nom,$NbrPlaces]) ;
+        $result = $stmtInsert->execute([$personne,$Quantite,$id_Animal,$Date,$Description]) ;
 
         if($result){
-          $success = "Login successful! Redirecting...";
+          $success = "Added to Journal";
         }else{
-          $error = "Nom d'utilisateur ou mot de passe est incorrect";
+          $error = "Not added to the Journal ";
          }
     // $variable_affichage = $connexion ->query("select * from cour");
     // while($bd_util =  $variable_affichage->fetch())
@@ -226,33 +208,32 @@ input[type='reset']:hover {
     <div class="table">
     <table>
             <tr>
-              <th>id_personne</th>
-              <th>Username</th>
-              <th>Password</th>
-              <th>Profil</th>
-              <th>Fonction</th>
+              <th>id User</th>
+              <th>Personne</th>
+              <th>Description</th>
+              <th>id_animal</th>
+              <th>Quantite</th>
+              <th>Date</th>
               <!-- <th>Actions</th> -->
             </tr>
             <?php
 
-                include("../connexion.php");
-                $sql = "SELECT * FROM utilisateur"; 
+                $sql = "SELECT * FROM journal"; 
                 $stmtSelect = $connexion->prepare($sql);
                 $stmtSelect ->execute();
-                $utilisateurs = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                $journals = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
 
-                include '../idToNom.php';
 
-                foreach($utilisateurs as $utilisateur): 
-                $utilisateur['profil'] = idToNom($connexion,$utilisateur['profil'])
+                foreach($journals as $journal): 
 
                 ?>
             <tr>
-                <td> <?php echo $utilisateur['id_personne'];?></td>
-                <td> <?php echo $utilisateur['username'];?></td> 
-                <td> <?php echo $utilisateur['password'];?></td> 
-                <td> <?php echo $utilisateur['profil'];?></td> 
-                <td> <?php echo $utilisateur['fonction'];?></td> 
+                <td> <?php echo $journal['idUser'];?></td> 
+                <td> <?php echo $journal['idPersonne'];?></td>
+                <td> <?php echo $journal['Description'];?></td> 
+                <td> <?php echo $journal['idAnimal'];?></td> 
+                <td> <?php echo $journal['Quantite'];?></td> 
+                <td> <?php echo $journal['Date'];?></td> 
                 <!-- <td>
                 <button class="delete-btn" data-id="<?php echo $utilisateur['id_personne']; ?>">Delete</button>
                 <button class="edit-btn" data-id="<?php echo $utilisateur['id_personne']; ?>">Edit</button>

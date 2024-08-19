@@ -10,7 +10,7 @@ function idToNom($connexion,$id_profil) {
 }
 
 
-    $sql = "select id_personne,nom,prenom,profil from personne";
+    $sql = "select id_personnel,Nom,prenom,profil from personne";
     $result = $connexion->query($sql);
 
     // Generate options for the select input
@@ -22,7 +22,7 @@ function idToNom($connexion,$id_profil) {
             $nomProfile = idToNom($connexion,$idProfile);
 
 
-            echo '<option value="' . $row["id_personne"] . '">' . $row["nom"] .' '. $row["prenom"] . ' '.$nomProfile. '</option>';
+            echo '<option value="' . $row["id_personnel"] . '">' . $row["Nom"] .' '. $row["prenom"] . ' '.$nomProfile. '</option>';
         }
     } else {
         echo '<option value="">No personne available</option>';

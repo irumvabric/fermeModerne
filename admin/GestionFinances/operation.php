@@ -222,7 +222,7 @@ function countOperation($connexion) {
       try {
           $connexion->beginTransaction();
   
-          $insertoperation = "INSERT INTO operation(id_operation, Description, montant, compte, type) VALUES(?,?,?,?,?)";
+          $insertoperation = "INSERT INTO operation(id_operation, Description, montant, compte, type,Date) VALUES(?,?,?,?,?,Now())";
           $stmtInsert = $connexion->prepare($insertoperation);
           $result = $stmtInsert->execute([$id, $Description, $Montant, $Compte, $Type]);
   
@@ -273,6 +273,7 @@ function countOperation($connexion) {
               <th>Montant</th>
               <th>Compte</th>
               <th>Type</th>
+              <th>Date</th>
 
             </tr>
             <?php
@@ -290,6 +291,7 @@ function countOperation($connexion) {
                 <td> <?php echo $operation['montant'];?></td> 
                 <td> <?php echo $operation['compte'];?></td> 
                 <td> <?php echo $operation['type'];?></td> 
+                <td> <?php echo $operation['Date'];?></td> 
                 
             </tr>
             <?php 
