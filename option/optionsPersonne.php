@@ -1,3 +1,4 @@
+
 <?php
 include("admin/connexion.php");
 
@@ -9,7 +10,7 @@ function idToNom($connexion,$id_profil) {
 }
 
 
-    $sql = "select id_personne,nom,prenom,profil from faculte";
+    $sql = "select id_personne,nom,prenom,profil from personne";
     $result = $connexion->query($sql);
 
     // Generate options for the select input
@@ -24,8 +25,7 @@ function idToNom($connexion,$id_profil) {
             echo '<option value="' . $row["id_personne"] . '">' . $row["nom"] .' '. $row["prenom"] . ' '.$nomProfile. '</option>';
         }
     } else {
-        echo '<option value="">No Faculte available</option>';
+        echo '<option value="">No personne available</option>';
     }
 
 ?>
-

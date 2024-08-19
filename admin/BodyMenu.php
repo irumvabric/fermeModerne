@@ -1,14 +1,14 @@
 
   <section>
 
-    <div class="card1">
-      <a href="GestionUtilisateur/Utilisateur.php">Ajouter utilisateur</a>
+    <div class="card">
+      <a href="GestionUtilisateur/Utilisateur.php">utilisateur</a>
     </div>
 
-    <div class="card1">
+    <!-- <div class="card1">
       <a href="GestionUtilisateur/rechercheUtilisateur.php">Recherche utilisateur</a>
-    </div>
-    <div class="card">
+    </div> -->
+    <div class="card1">
         <a href="GestionAnimaux/CRUDAnimaux.php">Animaux</a>
     </div>
 

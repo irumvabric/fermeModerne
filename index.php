@@ -40,6 +40,9 @@
                     case 'Comptable':
                         header('Location: comptable/GestionFinances/Finances.php');
                         break;
+                        case 'SuperAdmin':
+                            header('Location: superadmin/index.php');
+                            break;
                     default:
                         header('Location: index.php');
                         break;
@@ -62,7 +65,7 @@
         /* Custom CSS for the form */
         body {
             font-family: sans-serif;
-            background-color: #4CAF50;
+            background-color: #45aF50;
             background-image: url(images/MacBook Air - 5.png) ;
         }
         .auth-form {
@@ -93,7 +96,7 @@
             margin-bottom: 10px;
         }
         button[type="submit"] {
-            background-color: #4CAF50;
+            background-color: #45aF50;
             color: white;
             padding: 10px 20px;
             border: none;

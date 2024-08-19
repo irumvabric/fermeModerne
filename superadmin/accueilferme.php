@@ -73,7 +73,7 @@
 
     .card1 {
       background-color: #45a569;
-      /* width: 100%; */
+      
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       padding: 20px;
@@ -94,21 +94,27 @@
     }
 
   </style>
-  <title>Gestion ferme</title>
+  <title>Gestion Horaire</title>
 </head>
 <body>
 
   <header>
-    <h1>Gestion ferme</h1>
+    <h1>Gestion Horaire</h1>
   </header>
 
-  <?php
-      include "menu.php";
-  ?>
+  <nav>
+    <a href="../home.php">Accueil</a>
+    <a href="GestionProf/AjoutProf.php">Professeur</a>
+    <a href="GestionCours/ajoutCours.php">Cour</a>
+    <a href="GestionFaculte/Faculte.php">Faculté</a>
+    <a href="GestionDepartement/Departement.php">Departement</a>
+    <a href="GestionSalles/AjoutSalles.php">Salle</a>
+    <a href="../inputform.php">Horaire</a>
+    <a href="GestionClasse/ajoutClasse.php">Classe</a>
+    <a href="GestionPromotion/ajoutPromotion.php">Promotion</a>
+  </nav>
 
-<?php
-      include "BodyMenu.php";
-  ?>
+  
 
 </body>
 </html>
