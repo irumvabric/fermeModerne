@@ -143,6 +143,15 @@ header {
     margin: 0 0 10px;
 }
 
+.link{
+    text-decoration:none;
+    color:White;
+    padding:10px;
+    border:1px solid Red;
+    border-radius:15px;
+    background-color:#6ec4fc;
+}
+
 
     </style>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
@@ -234,26 +243,40 @@ function anMort($connexion) {
         </div>
 
         <div class="worker-guard">
-            <h3>Ouvrier ayant fait la garde</h3>
+            <h3>Journal de la ferme</h3>
+            
             <table>
                 <tr>
-                    <th>Name</th>
-                    <th>ID</th>
-                    <th>Role</th>
-                    <th>Gender</th>
+                    <th>idUser</th>
+                    <th>idPersonne</th>
+                    <th>Description</th>
+                    <th>idAnimal</th>
+                    <th>Quantite</th>
+                    <th>Date</th>
+                    <th>Options</th>
                 </tr>
-                <tr>
-                    <td>Samuel Smith</td>
-                    <td>ECS12-9087</td>
-                    <td>Teacher</td>
-                    <td>Male</td>
-                </tr>
-                <tr>
-                    <td>Peter Greg Nienhuis</td>
-                    <td>ECS12-9099</td>
-                    <td>Teacher</td>
-                    <td>Male</td>
-                </tr>
+
+                <?php
+
+                include("../admin/connexion.php");
+                $sql = "SELECT * FROM journal LIMIT 3"; 
+                $stmtSelect = $connexion->prepare($sql);
+                $stmtSelect ->execute();
+                $journals = $stmtSelect->fetchAll(PDO::FETCH_ASSOC);
+                foreach($journals as $journal): 
+                ?>
+            <tr>
+                <td> <?php echo $journal['idUser'];?></td>
+                <td><?php echo $journal['idPersonne']; ?></td>
+                <td><?php echo $journal['Description']; ?></td>
+                <td><?php echo $journal['idAnimal']; ?></td>
+                <td><?php echo $journal['Quantite']; ?></td>
+                <td><?php echo $journal['Date']; ?></td>
+                <td><a href="update.php?id=<?php echo $journal['id'];?>" class="link">Update</a> || <a href="Delete.php?id=<?php echo $journal['id'];?>" class="link">Delete</a></td>
+            </tr>
+            <?php 
+              endforeach;
+            ?>
             </table>
         </div>
 
